@@ -20,6 +20,6 @@ class EMNISTReader:
         labels = self._data['dataset'][0][0][0][0][0][1]
         idx = [i for i, label in enumerate(x[0] for x in labels) if label == class_label][num]
         # images are returned as an array with 784 elements, so we reshape to be a 2d array
-        return (images[idx]).reshape(28, 28)
+        return (images[idx]).reshape(28, 28).transpose()
 
 
