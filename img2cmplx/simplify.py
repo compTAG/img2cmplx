@@ -1,6 +1,18 @@
 from collections import namedtuple
 
 import cv2
+import networkx as nx
+
+class PreconditionFailedError(Exception):
+    """ Exception raised when we detect an error in the input
+
+    Attributes:
+        message -- explanation of the error
+    """
+    def __init__(self, message):
+        self.message = message
+
+
 
 # takes an img from the MNIST data set and returns a networkx graph with the
 # perimeter data
@@ -39,38 +51,28 @@ def extract_boundary(img, eps=.005):
     return simplified_longest_contour
 
 
+def curve_to_complex(curve):
+    graph = nx.Graph()
 
+    # assign index to each point and add vertex to graph
+    verts = set()
+    for pt in curve:
+        idx = len(verts)
+        v = (pt[0][0], pt[0][1])
 
-    # convert to networkx graph
-    # Vertex = namedtuple('Point', ['x', 'y'])
-    # G = nx.Graph()
-    # node_id = 0
-    # dup_vertices = False
+        if v in verts:
+            raise PreconditionFailedError("duplicate vertex in curve")
 
-    #     index = get_node_index(pt[0][0], pt[0][1], G)
-    #     # check to make sure we haven't already added this vertex
-    #     if index == -1:
-    #         G.add_node(node_id, v=Vertex(node_id,
-    #                                     float(pt[0][0]),
-    #                                     float(pt[0][1])))
-    #         node_id+=1
-    #     # vertices have to be unique, so if it isn't, we exit
-    #     else:
-    #         print("There is a duplicate vertex")
-    #         print(pt)
-    #         dup_vertices = True
-    # # add in the appropriate edges for the contour
-    # for i in range(0, len(c)-1):
-    #     v1 = c[i]
-    #     v2 = c[i+1]
-    #     G.add_edge(get_node_index(v1[0][0], v1[0][1], G),
-    #         get_node_index(v2[0][0], v2[0][1], G))
-    # # add edge from last to first vertex in contour to make closed curve
-    # v1 = c[len(c)-1]
-    # v2 = c[0]
-    # G.add_edge(get_node_index(v1[0][0], v1[0][1], G),
-    #     get_node_index(v2[0][0], v2[0][1], G))
-    #
+        verts.add(v)
+        graph.add_node(idx, pos=v)
+
+    # add edges for the contour
+    for i in range(0, len(curve)-1):
+        graph.add_edge(i, i+1)
+    graph.add_edge(len(curve)-1, 0)
+
+    return graph
+
     # # visualization functions for debugging
     # # save_contour_img(thresh, contours, copy.deepcopy(img), "test")
     # # draw_graph(G)

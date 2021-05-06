@@ -1,8 +1,11 @@
-import os
 import copy
+import os
 
 import cv2
+import matplotlib.pyplot as plt
+import networkx as nx
 import numpy as np
+
 from PIL import Image
 
 import img2cmplx as i2c
@@ -41,4 +44,14 @@ def display(data, fname):
 def display_contour(img, contour, fname):
     img2 = cv2.drawContours(img, [contour], 0, (0,255,0), 3)
     cv2.imwrite(fname, img2)
+
+
+def display_graph(graph, fname):
+    plt.clf()
+    nx.draw(graph,
+        pos=nx.get_node_attributes(graph, 'pos'),
+        with_labels=False,
+        node_size=3,
+    )
+    plt.savefig(fname)
 
