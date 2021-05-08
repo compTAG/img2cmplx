@@ -39,8 +39,15 @@ Or from emnist (such as the very famous class 10 example 1):
 Either way, once you have an image that you want to use, you can extract the
 boundary and then convert the curve to a complex as:
 
+    img = cv2.imread('an-img.png')
     cmplx = i2c.simplify.img_to_complex(img)
 
+**Note** to make our lives easier, we always read in a png!
+
+For a few more examples, check out the test files in the `test` folder!
+
+Happy Hacking!
+-- dlm
 
 ## Potential future features
 

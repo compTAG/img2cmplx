@@ -1,12 +1,11 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.0.1'
+VERSION = '0.0.4'
 DESCRIPTION = 'Extract a simplicial complex from a raster'
 LONG_DESCRIPTION = 'Perform some basic preprocessing on an image for TDA apps.'
 
 # Setting up
 setup(
-       # the name must match the folder name 'verysimplemodule'
         name="img2cmplx",
         version=VERSION,
         author="David L. Millman",
@@ -14,8 +13,13 @@ setup(
         description=DESCRIPTION,
         long_description=LONG_DESCRIPTION,
         packages=find_packages(),
-        install_requires=[], # add any additional packages that
-        # needs to be installed along with your package. Eg: 'caer'
+        install_requires=[
+            'Pillow',
+            'opencv-python',
+            'networkx',
+            'numpy',
+            'scipy',
+        ],
 
         keywords=['python', 'TDA'],
         classifiers= [

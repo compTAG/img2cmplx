@@ -29,6 +29,15 @@ data-init:
 data-clean:
 	rm -rf data
 
+
+################################################
+# DEPLOYMENT
+################################################
+deploy:
+	python setup.py sdist bdist_wheel
+	twine upload --skip-existing dist/*
+
+
 ################################################
 # TESTING
 ################################################
