@@ -13,18 +13,15 @@ class PreconditionFailedError(Exception):
         self.message = message
 
 
+def extract_boundary(img):
+    """ Extract the boundary from an image.
 
-# takes an img from the MNIST data set and returns a networkx graph with the
-# perimeter data
-# @param img: the image
-# @param eps: the epsilon value used in contour approximation
-# returns a networkx graph with vertices on the perimeter and edges along the
-# contour. Note that the vertices are a SIMPLE approx of the actual contour
-# data. The second return value is pertaining to general position. -2 means it was not
-# a simple polygon, -1 means it did not mean gen pos, 0 means it has duplicate
-# vertices in the contour  and 1 means success
-# Note that original eps is .005
-def extract_boundary(img, eps=.005):
+    We define the boundary as the longest contour of the image.
+
+    Attributes:
+        img -- the image from which to extract the boundary
+    """
+
     # convert image to binary
     imgray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     _, imbin = cv2.threshold(imgray, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
@@ -42,16 +39,35 @@ def extract_boundary(img, eps=.005):
     )[0]
 
     # simplify the contour as a function of curve length
-    epsilon = eps * cv2.arcLength(curve=longest_contour, closed=True)
-    simplified_longest_contour = cv2.approxPolyDP(
-        curve=longest_contour,
-        epsilon=epsilon,
-        closed=True,
-    )
+    # currently we have disabled contour simplification as openCv simplification
+    # will sometimes break a contour into multiple closed cuves
+    simplified_longest_contour = longest_contour
+    # epsilon = eps * cv2.arcLength(curve=longest_contour, closed=True)
+    # simplified_longest_contour = cv2.approxPolyDP(
+    #     curve=longest_contour,
+    #     epsilon=epsilon,
+    #     closed=True,
+    # )
+
     return simplified_longest_contour
 
 
 def curve_to_complex(curve):
+    """
+    Convert the curve to a networkx graph
+
+    Each node of the graphs has its coordinates as the "pos" attribute
+
+    Attributes:
+        curve -- curve to convert into a complex.  Curve is expected to be of
+        output produced by opencv's contour functions.  For example:
+            curve = [
+                [[0, 0]],
+                [[20, 5]],
+                [[17, 10]],
+                [[4, 10]],
+            ]
+    """
     graph = nx.Graph()
 
     # assign index to each point and add vertex to graph
