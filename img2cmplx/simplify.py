@@ -76,3 +76,18 @@ def curve_to_complex(curve):
     # # visualization functions for debugging
     # # save_contour_img(thresh, contours, copy.deepcopy(img), "test")
     # # draw_graph(G)
+
+
+def img_to_complex(img):
+    """ Create a complex from the image
+
+    The complex is created by extracting the boundary of the largest contour.
+    (basicalliy just calls `extract_boundary` and `curve_to_complex`.  The
+    complex is represented as a networkx graph in which the vertex positions are
+    the `pos` attribute.
+
+    Attributes:
+        img -- the image from which to create a complex
+    """
+    bdd = extract_boundary(img)
+    return curve_to_complex(bdd)

@@ -14,6 +14,8 @@ def test_playground():
     cmplx = i2c.simplify.curve_to_complex(bdd)
     test_util.display_graph(cmplx, 'graph.png')
 
+    i2c.simplify.img_to_complex(img)
+
 
 def test_simplify_extract_boundary():
     # img = test_util.load_an_emnist()
